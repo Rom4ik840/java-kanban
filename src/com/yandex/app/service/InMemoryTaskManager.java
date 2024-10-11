@@ -22,6 +22,7 @@ public class InMemoryTaskManager implements TaskManager {
         this.historyManager = historyManager;
     }
 
+    // Добавляет новую задачу в менеджер задач.
     @Override
     public Task addTask(Task task) {
         if (task == null) {
@@ -34,6 +35,7 @@ public class InMemoryTaskManager implements TaskManager {
         return task;
     }
 
+    // Добавляет новый эпик в менеджер задач.
     @Override
     public Epic addEpic(Epic epic) {
         if (epic == null) {
@@ -44,6 +46,7 @@ public class InMemoryTaskManager implements TaskManager {
         return epic;
     }
 
+    // Добавляет новую подзадачу в менеджер задач.
     @Override
     public Subtask addSubtask(Subtask subtask) {
         if (subtask == null) {
@@ -58,21 +61,25 @@ public class InMemoryTaskManager implements TaskManager {
         return subtask;
     }
 
+    // Возвращает список всех задач.
     @Override
     public List<Task> getAllTasks() {
         return List.copyOf(tasks.values());
     }
 
+    // Возвращает список всех эпиков.
     @Override
     public List<Epic> getAllEpics() {
         return List.copyOf(epics.values());
     }
 
+    // Возвращает список всех подзадач.
     @Override
     public List<Subtask> getAllSubtasks() {
         return List.copyOf(subtasks.values());
     }
 
+    // Возвращает задачу по её ID.
     @Override
     public Task getTaskById(int id) {
         Task task = tasks.get(id);
@@ -82,6 +89,7 @@ public class InMemoryTaskManager implements TaskManager {
         return task;
     }
 
+    // Возвращает эпик по его ID.
     @Override
     public Epic getEpicById(int id) {
         Epic epic = epics.get(id);
@@ -91,6 +99,7 @@ public class InMemoryTaskManager implements TaskManager {
         return epic;
     }
 
+    // Возвращает подзадачу по её ID.
     @Override
     public Subtask getSubtaskById(int id) {
         Subtask subtask = subtasks.get(id);
@@ -100,11 +109,13 @@ public class InMemoryTaskManager implements TaskManager {
         return subtask;
     }
 
+    // Удаляет задачу по её ID.
     @Override
     public void deleteTaskById(int id) {
         tasks.remove(id);
     }
 
+    // Удаляет эпик по его ID. Также удаляются все подзадачи, связанные с этим эпиком.
     @Override
     public void deleteEpicById(int id) {
         Epic epic = epics.remove(id);
@@ -115,6 +126,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
+    // Удаляет подзадачу по её ID.
     @Override
     public void deleteSubtaskById(int id) {
         Subtask subtask = subtasks.remove(id);
@@ -123,11 +135,13 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
+    // Удаляет все задачи.
     @Override
     public void deleteAllTasks() {
         tasks.clear();
     }
 
+    // Удаляет все подзадачи.
     @Override
     public void deleteAllSubtasks() {
         for (Subtask subtask : new ArrayList<>(subtasks.values())) {
@@ -136,12 +150,14 @@ public class InMemoryTaskManager implements TaskManager {
         subtasks.clear();
     }
 
+    // Удаляет все эпики и подзадачи.
     @Override
     public void deleteAllEpics() {
         epics.clear();
         subtasks.clear();
     }
 
+    // Обновляет задачу.
     @Override
     public void updateTask(Task task) {
         if (task == null || !tasks.containsKey(task.getId())) {
@@ -151,6 +167,7 @@ public class InMemoryTaskManager implements TaskManager {
         taskVersions.get(task.getId()).add(task);
     }
 
+    // Обновляет эпик.
     @Override
     public void updateEpic(Epic epic) {
         if (epic == null || !epics.containsKey(epic.getId())) {
@@ -160,6 +177,7 @@ public class InMemoryTaskManager implements TaskManager {
         epic.updateStatus();
     }
 
+    // Обновляет подзадачу.
     @Override
     public void updateSubtask(Subtask subtask) {
         if (subtask == null || !subtasks.containsKey(subtask.getId())) {
@@ -169,6 +187,7 @@ public class InMemoryTaskManager implements TaskManager {
         subtask.getEpic().updateStatus();
     }
 
+    // Возвращает список подзадач эпика.
     @Override
     public List<Subtask> getSubtasksOfEpic(int epicId) {
         Epic epic = getEpicById(epicId);
@@ -179,11 +198,13 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
+    // Возвращает историю просмотров задач.
     @Override
     public List<Task> getHistory() {
         return historyManager.getHistory();
     }
 
+    // Возвращает все версии задачи по её ID.
     public List<Task> getTaskVersions(int taskId) {
         return taskVersions.getOrDefault(taskId, new ArrayList<>());
     }
