@@ -3,7 +3,7 @@ package com.yandex.app.model;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+//Тесты класса Subtask
 class SubtaskTest {
 
     @Test

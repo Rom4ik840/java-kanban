@@ -174,7 +174,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    // Обновляет подзадачу.
+    // Обновляет подзадачу!
     @Override
     public void updateSubtask(Subtask subtask) {
         if (subtasks.containsKey(subtask.getId())) {
@@ -185,7 +185,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    // Возвращает список подзадач эпика.
+    // Возвращает список подзадач эпика!
     @Override
     public List<Subtask> getSubtasksOfEpic(int epicId) {
         Epic epic = getEpicById(epicId);

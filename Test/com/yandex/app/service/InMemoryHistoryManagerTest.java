@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+//Тесты класса InMemoryHistoryManager
 class InMemoryHistoryManagerTest {
     private HistoryManager historyManager;
 

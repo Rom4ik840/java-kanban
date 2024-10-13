@@ -1,12 +1,12 @@
 package com.yandex.app.model;
 
-// Класс Subtask представляет подзадачу, которая является типом задачи и связана с эпиком.
+// Класс Subtask представляет подзадачу, которая является типом задачи и связана с эпиком!
 public class Subtask extends Task {
 
     // Эпик, к которому относится эта подзадача.
     private Epic epic;
 
-    // Конструктор класса Subtask.
+    // Конструктор класса Subtask!
     public Subtask(String title, String description, Status status, Epic epic) {
         super(title, description, status);
         this.epic = epic;

@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-
+//Тесты класса Epic
 class EpicTest {
     private Epic epic1;
     private Epic epic2;

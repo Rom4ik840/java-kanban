@@ -26,13 +26,13 @@ public class Epic extends Task {
         updateStatus();
     }
 
-    // Удаляет подзадачу из эпика.
+    // Удаляет подзадачу из эпика!
     public void removeSubtask(Subtask subtask) {
         subtasks.remove(subtask);
         updateStatus();
     }
 
-    // Обновляет статус эпика в зависимости от статусов его подзадач.
+    // Обновляет статус эпика в зависимости от статусов его подзадач!
     public void updateStatus() {
         if (subtasks.isEmpty()) {
             setStatus(Status.NEW);
@@ -50,7 +50,7 @@ public class Epic extends Task {
         }
     }
 
-    // Возвращает строковое представление эпика.
+    // Возвращает строковое представление эпика!
     @Override
     public String toString() {
         return "Epic{" +
