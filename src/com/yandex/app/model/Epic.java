@@ -10,7 +10,7 @@ public class Epic extends Task {
         super(title, description, Status.NEW);
         this.subtasks = new ArrayList<>();
     }
-
+    // Возвращает список подзадач эпика.
     public List<Subtask> getSubtasks() {
         return subtasks;
     }

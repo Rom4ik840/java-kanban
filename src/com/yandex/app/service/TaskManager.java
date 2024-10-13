@@ -7,16 +7,16 @@ import com.yandex.app.model.Task;
 import java.util.List;
 
 public interface TaskManager {
-    // Создание задачи
+    // Создание задачи!
     Task addTask(Task task);
 
-    // Создание эпика
+    // Создание эпика!
     Epic addEpic(Epic epic);
 
-    // Создание подзадачи
+    // Создание подзадачи!
     Subtask addSubtask(Subtask subtask);
 
-    // Получение всех задач
+    // Получение всех задач!
     List<Task> getAllTasks();
 
     // Получение всех эпиков

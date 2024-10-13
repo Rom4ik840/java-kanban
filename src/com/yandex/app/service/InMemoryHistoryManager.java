@@ -7,26 +7,26 @@ import java.util.stream.Stream;
 
 public class InMemoryHistoryManager implements HistoryManager {
 
-    private Node head;  // Начало списка
-    private Node tail;  // Конец списка
+    private Node head;  // Начало списка!
+    private Node tail;  // Конец списка!
     private final Map<Integer, Node> nodeMap = new HashMap<>();  // HashMap для быстрого доступа к узлам по ID задачи
 
-    // Добавление задачи в конец истории
+    // Добавление задачи в конец истории!
     @Override
     public void add(Task task) {
         if (task == null) {
             throw new IllegalArgumentException("Задача не может быть null.");
         }
 
-        // Если задача уже есть в истории, удаляем её перед добавлением
+        // Если задача уже есть в истории, удаляем её перед добавлением!
         if (nodeMap.containsKey(task.getId())) {
             removeNode(nodeMap.get(task.getId()));
         }
 
-        // Создаем новый узел для задачи и добавляем его в конец списка
+        // Создаем новый узел для задачи и добавляем его в конец списка!
         Node newNode = new Node(task);
         linkLast(newNode);
-        nodeMap.put(task.getId(), newNode);  // Обновляем ссылку на узел в HashMap
+        nodeMap.put(task.getId(), newNode);  // Обновляем ссылку на узел в HashMap!
     }
 
     // Удаление задачи из истории по её ID

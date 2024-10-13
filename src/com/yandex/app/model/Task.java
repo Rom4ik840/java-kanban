@@ -49,17 +49,17 @@ public class Task {
         return description;
     }
 
-    // Устанавливает описание задачи.
+    // Устанавливает описание задачи!
     public void setDescription(String description) {
         this.description = description;
     }
 
-    // Возвращает статус задачи.
+    // Возвращает статус задачи!
     public Status getStatus() {
         return status;
     }
 
-    // Устанавливает статус задачи.
+    // Устанавливает статус задачи!
     public void setStatus(Status status) {
         this.status = status;
     }

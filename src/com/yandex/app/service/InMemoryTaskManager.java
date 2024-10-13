@@ -167,7 +167,7 @@ public class InMemoryTaskManager implements TaskManager {
         taskVersions.get(task.getId()).add(task);
     }
 
-    // Обновляет эпик.
+    // Обновляет эпик!
     @Override
     public void updateEpic(Epic epic) {
         if (epic == null || !epics.containsKey(epic.getId())) {
@@ -177,7 +177,7 @@ public class InMemoryTaskManager implements TaskManager {
         epic.updateStatus();
     }
 
-    // Обновляет подзадачу.
+    // Обновляет подзадачу!
     @Override
     public void updateSubtask(Subtask subtask) {
         if (subtask == null || !subtasks.containsKey(subtask.getId())) {
@@ -187,7 +187,7 @@ public class InMemoryTaskManager implements TaskManager {
         subtask.getEpic().updateStatus();
     }
 
-    // Возвращает список подзадач эпика.
+    // Возвращает список подзадач эпика!
     @Override
     public List<Subtask> getSubtasksOfEpic(int epicId) {
         Epic epic = getEpicById(epicId);
@@ -198,7 +198,7 @@ public class InMemoryTaskManager implements TaskManager {
         }
     }
 
-    // Возвращает историю просмотров задач.
+    // Возвращает историю просмотров задач!
     @Override
     public List<Task> getHistory() {
         return historyManager.getHistory();

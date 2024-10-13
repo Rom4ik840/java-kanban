@@ -16,7 +16,7 @@ public class Main {
         // Используем фабрику для получения объекта TaskManager
         TaskManager manager = Managers.getDefault();
 
-        // Создание задач, эпиков и подзадач
+        // Создание задач, эпиков и подзадач!
         Task task1 = new Task("Переезд", "Собрать коробки, упаковать кошку, сказать слова прощания", Status.NEW);
         manager.addTask(task1);
 
@@ -28,7 +28,7 @@ public class Main {
         manager.addSubtask(subtask1);
         manager.addSubtask(subtask2);
 
-        // Вывод всех задач, эпиков и подзадач
+        // Вывод всех задач, эпиков и подзадач!
         System.out.println("Список всех задач:");
         System.out.println(manager.getAllTasks());
 
@@ -38,7 +38,7 @@ public class Main {
         System.out.println("Список всех подзадач:");
         System.out.println(manager.getAllSubtasks());
 
-        // Изменение заголовков, описаний и статусов задач
+        // Изменение заголовков, описаний и статусов задач!
         subtask1.setStatus(Status.IN_PROGRESS);
         subtask1.setTitle("Обновленная задача 1");
         subtask1.setDescription("Обновленное описание задачи 1");
@@ -47,7 +47,7 @@ public class Main {
         subtask2.setTitle("Обновленная задача 2");
         subtask2.setDescription("Обновленное описание задачи 2");
 
-        // Обновление задач в менеджере
+        // Обновление задач в менеджере!
         manager.updateSubtask(subtask1);
         manager.updateSubtask(subtask2);
 
