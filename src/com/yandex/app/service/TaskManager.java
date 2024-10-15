@@ -19,51 +19,51 @@ public interface TaskManager {
     // Получение всех задач!
     List<Task> getAllTasks();
 
-    // Получение всех эпиков
+    // Получение всех эпиков!
     List<Epic> getAllEpics();
 
-    // Получение всех подзадач
+    // Получение всех подзадач!
     List<Subtask> getAllSubtasks();
 
-    // Получение задачи по ID
+    // Получение задачи по ID!
     Task getTaskById(int id);
 
-    // Получение эпика по ID
+    // Получение эпика по ID!
     Epic getEpicById(int id);
 
-    // Получение подзадачи по ID
+    // Получение подзадачи по ID!
     Subtask getSubtaskById(int id);
 
-    // Удаление задачи по ID
+    // Удаление задачи по ID!
     void deleteTaskById(int id);
 
-    // Удаление эпика по ID (вместе с подзадачами)
+    // Удаление эпика по ID (вместе с подзадачами)!
     void deleteEpicById(int id);
 
-    // Удаление подзадачи по ID
+    // Удаление подзадачи по ID!
     void deleteSubtaskById(int id);
 
-    // Удаление всех задач
+    // Удаление всех задач!
     void deleteAllTasks();
 
-    // Удаление всех подзадач
+    // Удаление всех подзадач!
     void deleteAllSubtasks();
 
-    // Удаление всех эпиков
+    // Удаление всех эпиков!
     void deleteAllEpics();
 
-    // Обновление задачи
+    // Обновление задачи!
     void updateTask(Task task);
 
-    // Обновление эпика
+    // Обновление эпика!
     void updateEpic(Epic epic);
 
-    // Обновление подзадачи
+    // Обновление подзадачи!
     void updateSubtask(Subtask subtask);
 
-    // Получение списка подзадач для эпика по ID
+    // Получение списка подзадач для эпика по ID!
     List<Subtask> getSubtasksOfEpic(int epicId);
 
-    // Получение истории просмотров задач
+    // Получение истории просмотров задач!
     List<Task> getHistory();
 }
