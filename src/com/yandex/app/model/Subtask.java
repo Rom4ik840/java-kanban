@@ -3,7 +3,7 @@ package com.yandex.app.model;
 // Класс Subtask представляет подзадачу, которая является типом задачи и связана с эпиком!
 public class Subtask extends Task {
 
-    // Эпик, к которому относится эта подзадача.
+    // Эпик, к которому относится эта подзадача!
     private Epic epic;
 
     // Конструктор класса Subtask!
@@ -12,18 +12,23 @@ public class Subtask extends Task {
         this.epic = epic;
     }
 
-    // Возвращает эпик, к которому относится эта подзадача.
+    // Возвращает эпик, к которому относится эта подзадача!
     public Epic getEpic() {
         return epic;
     }
 
-    // Устанавливает эпик для этой подзадачи.
+    // Устанавливает эпик для этой подзадачи!
     public void setEpic(Epic epic) {
         if (epic == null) {
             throw new IllegalArgumentException("Эпик не может быть null.");
         }
+        if (epic.getId() == this.getId()) { // Сравниваем ID подзадачи и эпика
+            throw new IllegalArgumentException("Подзадача не может ссылаться на себя.");
+        }
         this.epic = epic;
     }
+
+
 
     // Возвращает строковое представление подзадачи.
     @Override
@@ -33,6 +38,7 @@ public class Subtask extends Task {
                 ", title='" + getTitle() + '\'' +
                 ", description='" + getDescription() + '\'' +
                 ", status=" + getStatus() +
+                ", epicId=" + (epic != null ? epic.getId() : "null") +
                 '}';
     }
 }

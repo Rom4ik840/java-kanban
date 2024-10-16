@@ -63,6 +63,20 @@ public class Task {
         this.status = status;
     }
 
+    // Переопределение методов equals и hashCode для корректного сравнения задач
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true; // Проверка на ссылочное равенство
+        if (!(o instanceof Task)) return false; // Проверка на принадлежность к классу Task
+        Task task = (Task) o; // Приведение к классу Task
+        return id == task.id; // Сравнение по идентификатору
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(id); // Генерация хеш-кода по идентификатору
+    }
+
     // Возвращает строковое представление задачи.
     @Override
     public String toString() {
