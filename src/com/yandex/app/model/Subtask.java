@@ -22,8 +22,13 @@ public class Subtask extends Task {
         if (epic == null) {
             throw new IllegalArgumentException("Эпик не может быть null.");
         }
+        if (epic.getId() == this.getId()) { // Сравниваем ID подзадачи и эпика
+            throw new IllegalArgumentException("Подзадача не может ссылаться на себя.");
+        }
         this.epic = epic;
     }
+
+
 
     // Возвращает строковое представление подзадачи.
     @Override

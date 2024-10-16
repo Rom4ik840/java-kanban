@@ -10,6 +10,7 @@ public class Epic extends Task {
         super(title, description, Status.NEW);
         this.subtasks = new ArrayList<>();
     }
+
     // Возвращает список подзадач эпика.
     public List<Subtask> getSubtasks() {
         return subtasks;
@@ -47,5 +48,16 @@ public class Epic extends Task {
         } else {
             setStatus(Status.IN_PROGRESS);
         }
+    }
+
+    // Возвращает строковое представление эпика.
+    @Override
+    public String toString() {
+        return "Epic{" +
+                "title='" + getTitle() + '\'' +
+                ", description='" + getDescription() + '\'' +
+                ", status=" + getStatus() +
+                ", subtasks=" + subtasks +
+                '}';
     }
 }

@@ -15,6 +15,7 @@ public class InMemoryTaskManager implements TaskManager {
     private final Map<Integer, Task> tasks = new HashMap<>();
     private final Map<Integer, Epic> epics = new HashMap<>();
     private final Map<Integer, Subtask> subtasks = new HashMap<>();
+    //Мапа для: Хранение версий задач, Восстановление предыдущих состояний,Анализ изменений, Отображение истории изменений.
     private final Map<Integer, List<Task>> taskVersions = new HashMap<>();
     private final HistoryManager historyManager;
 

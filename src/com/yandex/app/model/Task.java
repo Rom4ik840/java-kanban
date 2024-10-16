@@ -49,17 +49,17 @@ public class Task {
         return description;
     }
 
-    // Устанавливает описание задачи!
+    // Устанавливает описание задачи.
     public void setDescription(String description) {
         this.description = description;
     }
 
-    // Возвращает статус задачи!
+    // Возвращает статус задачи.
     public Status getStatus() {
         return status;
     }
 
-    // Устанавливает статус задачи!
+    // Устанавливает статус задачи.
     public void setStatus(Status status) {
         this.status = status;
     }
@@ -82,10 +82,10 @@ public class Task {
     @Override
     public String toString() {
         return "Task{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", status=" + status +
+                "id=" + getId() +
+                ", title='" + getTitle() + '\'' +
+                ", description='" + getDescription() + '\'' +
+                ", status=" + getStatus() +
                 '}';
     }
 }

@@ -41,8 +41,8 @@ public class InMemoryHistoryManager implements HistoryManager {
     // Возвращает историю задач в виде списка
     @Override
     public List<Task> getHistory() {
-        return Stream.iterate(head, Objects::nonNull, node -> node.next)
-                .map(node -> node.task)
+        return Stream.iterate(head, Objects::nonNull, node -> node.getNext())
+                .map(Node::getTask)
                 .collect(Collectors.toList());
     }
 
@@ -53,24 +53,24 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (tail == null) {  // Если список пуст
             head = tail = node;
         } else {
-            tail.next = node;
-            node.prev = tail;
+            tail.setNext(node);
+            node.setPrev(tail);
             tail = node;
         }
     }
 
     // Удаляет узел из списка
     private void removeNode(Node node) {
-        if (node.prev != null) {
-            node.prev.next = node.next;  // Переставляем ссылку с предыдущего узла
+        if (node.getPrev() != null) {
+            node.getPrev().setNext(node.getNext());  // Переставляем ссылку с предыдущего узла
         } else {
-            head = node.next;  // Если удаляется первый узел
+            head = node.getNext();  // Если удаляется первый узел
         }
 
-        if (node.next != null) {
-            node.next.prev = node.prev;  // Переставляем ссылку с следующего узла
+        if (node.getNext() != null) {
+            node.getNext().setPrev(node.getPrev());  // Переставляем ссылку с следующего узла
         } else {
-            tail = node.prev;  // Если удаляется последний узел
+            tail = node.getPrev();  // Если удаляется последний узел
         }
     }
 }

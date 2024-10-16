@@ -10,7 +10,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class EpicTest {
     private Epic epic1;
     private Epic epic2;
-    private Subtask subtask;
+    private Subtask subtask1;
+    private Subtask subtask2;
     private TaskManager taskManager;
 
     @BeforeEach
@@ -18,7 +19,15 @@ class EpicTest {
         taskManager = Managers.getDefault();
         epic1 = new Epic("Эпик 1", "Описание 1");
         epic2 = new Epic("Эпик 2", "Описание 2");
-        subtask = new Subtask("Подзадача 1", "Описание 1", Status.NEW, epic1);
+
+        // Создаем подзадачи
+        subtask1 = new Subtask("Подзадача 1", "Описание 1", Status.NEW, epic1);
+        subtask2 = new Subtask("Подзадача 2", "Описание 2", Status.DONE, epic1);
+
+        // Добавляем эпик и подзадачи в менеджер
+        taskManager.addEpic(epic1);
+        taskManager.addSubtask(subtask1);
+        taskManager.addSubtask(subtask2);
     }
 
     @Test
@@ -46,27 +55,15 @@ class EpicTest {
 
     @Test
     void testRemoveSubtaskUpdatesEpic() {
-        taskManager.addEpic(epic1);
-        taskManager.addSubtask(subtask);
-
-        subtask.setId(1); // Устанавливаем ID для подзадачи
-        taskManager.deleteSubtaskById(subtask.getId()); // Удаляем подзадачу по ее ID
+        taskManager.deleteSubtaskById(subtask1.getId()); // Удаляем подзадачу по ее ID
 
         // Проверяем, что в списке подзадач эпика больше нет ID удаленной подзадачи
-        assertFalse(epic1.getSubtasks().contains(subtask),
+        assertFalse(epic1.getSubtasks().contains(subtask1),
                 "Эпик не должен содержать удаленную подзадачу.");
     }
 
     @Test
     void testEpicStatusUpdate() {
-        taskManager.addEpic(epic1);
-
-        Subtask subtask1 = new Subtask("Подзадача 1", "Описание 1", Status.NEW, epic1);
-        Subtask subtask2 = new Subtask("Подзадача 2", "Описание 2", Status.DONE, epic1);
-
-        taskManager.addSubtask(subtask1);
-        taskManager.addSubtask(subtask2);
-
         assertEquals(Status.IN_PROGRESS, epic1.getStatus(), "Статус эпика должен быть IN_PROGRESS.");
 
         taskManager.deleteSubtaskById(subtask1.getId());
@@ -75,7 +72,8 @@ class EpicTest {
 
     @Test
     void testEpicWithoutSubtasksIsNew() {
-        taskManager.addEpic(epic1);
+        taskManager.deleteSubtaskById(subtask1.getId()); // Удаляем первую подзадачу
+        taskManager.deleteSubtaskById(subtask2.getId()); // Удаляем вторую подзадачу
         assertEquals(Status.NEW, epic1.getStatus(), "Статус эпика без подзадач должен быть NEW.");
     }
 }
