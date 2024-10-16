@@ -12,7 +12,7 @@ public class Task {
     // Описание задачи.
     private String description;
 
-    // Статус задачи.
+    // Статус задачи!
     private Status status;
 
     // Конструктор класса Task.
@@ -22,9 +22,8 @@ public class Task {
         this.status = status;
     }
 
-    // Геттеры и сеттеры
-
-    // Возвращает идентификатор задачи.
+    // Геттеры и сеттеры!
+    // Возвращает идентификатор задачи!
     public int getId() {
         return id;
     }
