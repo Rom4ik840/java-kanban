@@ -66,4 +66,13 @@ public interface TaskManager {
 
     // Получение истории просмотров задач!
     List<Task> getHistory();
+
+    // Получение количества задач!
+    int getTasksCount();
+
+    // Получение количества эпиков!
+    int getEpicsCount();
+
+    // Получение количества подзадач!
+    int getSubtasksCount();
 }

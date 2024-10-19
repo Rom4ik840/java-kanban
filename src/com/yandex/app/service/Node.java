@@ -7,8 +7,11 @@ public class Node {
     private Node prev;
     private Node next;
 
-    public Node(Task task) {
+    // Конструктор для создания узла с указанием соседей
+    public Node(Task task, Node prev, Node next) {
         this.task = task;
+        this.prev = prev;
+        this.next = next;
     }
 
     // Геттер для task

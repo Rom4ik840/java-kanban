@@ -1,9 +1,11 @@
 package com.yandex.app.model;
 
+import com.yandex.app.model.TaskType;
+
 // Класс Subtask представляет подзадачу, которая является типом задачи и связана с эпиком!
 public class Subtask extends Task {
 
-    // Эпик, к которому относится эта подзадача!
+    // Эпик, к которому относится эта подзадача.
     private Epic epic;
 
     // Конструктор класса Subtask!
@@ -12,33 +14,22 @@ public class Subtask extends Task {
         this.epic = epic;
     }
 
-    // Возвращает эпик, к которому относится эта подзадача!
+    // Возвращает эпик, к которому относится эта подзадача.
     public Epic getEpic() {
         return epic;
     }
 
-    // Устанавливает эпик для этой подзадачи!
+    // Устанавливает эпик для этой подзадачи.
     public void setEpic(Epic epic) {
         if (epic == null) {
             throw new IllegalArgumentException("Эпик не может быть null.");
         }
-        if (epic.getId() == this.getId()) { // Сравниваем ID подзадачи и эпика
-            throw new IllegalArgumentException("Подзадача не может ссылаться на себя.");
-        }
         this.epic = epic;
     }
 
-
-
-    // Возвращает строковое представление подзадачи.
+    // Возвращает строковое представление подзадачи в формате CSV.
     @Override
     public String toString() {
-        return "Subtask{" +
-                "id=" + getId() +
-                ", title='" + getTitle() + '\'' +
-                ", description='" + getDescription() + '\'' +
-                ", status=" + getStatus() +
-                ", epicId=" + (epic != null ? epic.getId() : "null") +
-                '}';
+        return getId() + "," + TaskType.SUBTASK + "," + getTitle() + "," + getStatus() + "," + getDescription() + "," + (epic != null ? epic.getId() : "null");
     }
 }

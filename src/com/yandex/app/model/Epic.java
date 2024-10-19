@@ -2,10 +2,15 @@ package com.yandex.app.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.yandex.app.model.TaskType;
 
+// Класс Epic наследует от класса Task и представляет собой эпик, содержащий подзадачи.
 public class Epic extends Task {
+    // Список подзадач, связанных с эпиком.
     private final List<Subtask> subtasks;
 
+    // Конструктор класса Epic.
+    // Принимает заголовок и описание, статус устанавливается по умолчанию в NEW.
     public Epic(String title, String description) {
         super(title, description, Status.NEW);
         this.subtasks = new ArrayList<>();
@@ -16,6 +21,7 @@ public class Epic extends Task {
         return subtasks;
     }
 
+    // Добавляет подзадачу в список подзадач.
     public void addSubtask(Subtask subtask) {
         if (subtask.getEpic() != this) {
             throw new IllegalArgumentException("Подзадача не принадлежит этому эпику");
@@ -24,14 +30,16 @@ public class Epic extends Task {
             throw new IllegalArgumentException("Эпик не может быть добавлен как подзадача самому себе");
         }
         subtasks.add(subtask);
-        updateStatus();
+        updateStatus(); // Обновление статуса после добавления подзадачи
     }
 
+    // Удаляет подзадачу по ID.
     public void removeSubtask(int subtaskId) {
         subtasks.removeIf(subtask -> subtask.getId() == subtaskId);
-        updateStatus();
+        updateStatus(); // Обновление статуса после удаления подзадачи
     }
 
+    // Обновляет статус эпика на основе статусов подзадач.
     public void updateStatus() {
         if (subtasks.isEmpty()) {
             setStatus(Status.NEW);
@@ -50,14 +58,22 @@ public class Epic extends Task {
         }
     }
 
-    // Возвращает строковое представление эпика.
+    // Возвращает строковое представление эпика для сохранения в файл.
     @Override
     public String toString() {
-        return "Epic{" +
-                "title='" + getTitle() + '\'' +
-                ", description='" + getDescription() + '\'' +
-                ", status=" + getStatus() +
-                ", subtasks=" + subtasks +
-                '}';
+        return getId() + "," + TaskType.EPIC + "," + getTitle() + "," + getStatus() + "," + getDescription() + ",";
+    }
+
+    // Создает эпик из строки.
+    public static Epic fromString(String value) {
+        String[] parts = value.split(",");
+        int id = Integer.parseInt(parts[0]);
+        String title = parts[2];
+        String description = parts[4];
+        Status status = Status.valueOf(parts[3]);
+        Epic epic = new Epic(title, description);
+        epic.setId(id); // Установка идентификатора
+        epic.setStatus(status); // Установка статуса
+        return epic;
     }
 }

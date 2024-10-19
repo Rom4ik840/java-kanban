@@ -24,7 +24,7 @@ public class InMemoryHistoryManager implements HistoryManager {
         }
 
         // Создаем новый узел для задачи и добавляем его в конец списка!
-        Node newNode = new Node(task);
+        Node newNode = new Node(task, tail, null);  // Используем новый конструктор
         linkLast(newNode);
         nodeMap.put(task.getId(), newNode);  // Обновляем ссылку на узел в HashMap!
     }
