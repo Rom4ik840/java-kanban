@@ -14,6 +14,7 @@ public class Epic extends Task {
     public Epic(String title, String description) {
         super(title, description, Status.NEW);
         this.subtasks = new ArrayList<>();
+        setTaskType(TaskType.EPIC); // Установить тип задачи как EPIC
     }
 
     // Возвращает список подзадач эпика.
@@ -61,19 +62,6 @@ public class Epic extends Task {
     // Возвращает строковое представление эпика для сохранения в файл.
     @Override
     public String toString() {
-        return getId() + "," + TaskType.EPIC + "," + getTitle() + "," + getStatus() + "," + getDescription() + ",";
-    }
-
-    // Создает эпик из строки.
-    public static Epic fromString(String value) {
-        String[] parts = value.split(",");
-        int id = Integer.parseInt(parts[0]);
-        String title = parts[2];
-        String description = parts[4];
-        Status status = Status.valueOf(parts[3]);
-        Epic epic = new Epic(title, description);
-        epic.setId(id); // Установка идентификатора
-        epic.setStatus(status); // Установка статуса
-        return epic;
+        return getId() + "," + getTaskType() + "," + getTitle() + "," + getStatus() + "," + getDescription() + ",";
     }
 }

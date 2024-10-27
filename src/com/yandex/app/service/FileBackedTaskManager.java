@@ -4,6 +4,8 @@ import com.yandex.app.model.Epic;
 import com.yandex.app.model.Subtask;
 import com.yandex.app.model.Task;
 import com.yandex.app.model.Status;
+import com.yandex.app.service.ManagerSaveException;
+import com.yandex.app.model.TaskType;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +25,11 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     // Сохраняем текущие задачи и историю в файл
     public void save() {
         try {
+            // Проверяем, существует ли файл. Если нет, создаем новый файл.
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
             StringBuilder sb = new StringBuilder();
             sb.append("id,type,name,status,description,epicId\n");
             for (Task task : getAllTasks()) {
@@ -117,17 +124,15 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     // Загружаем задачи из файла
     public void loadFromFile(File file) {
+        if (!file.exists()) {
+            throw new RuntimeException("Файл не существует: " + file.getAbsolutePath());
+        }
+
         try {
             List<String> lines = Files.readAllLines(file.toPath());
             for (String line : lines.subList(1, lines.size())) {
                 Task task = fromString(line);
-                if (task instanceof Epic) {
-                    addEpic((Epic) task); // добавляем эпик
-                } else if (task instanceof Subtask) {
-                    addSubtask((Subtask) task); // добавляем подзадачу
-                } else {
-                    addTask(task); // добавляем обычную задачу
-                }
+                addTaskToManager(task);
             }
         } catch (IOException e) {
             throw new RuntimeException("Ошибка загрузки данных из файла: " + e.getMessage());
@@ -138,28 +143,43 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     private Task fromString(String value) {
         String[] parts = value.split(",");
         int id = Integer.parseInt(parts[0]);
-        String type = parts[1];
+        TaskType type = TaskType.valueOf(parts[1]);
         String name = parts[2];
         Status status = Status.valueOf(parts[3]);
         String description = parts[4];
 
         switch (type) {
-            case "TASK":
-                Task task = new Task(name, description, status);
-                task.setId(id); // сохраняем id задачи
+            case TASK:
+                Task task = new Task(name, description, status); // Создаём без id
+                task.setId(id); // Устанавливаем id
                 return task;
-            case "EPIC":
-                Epic epic = new Epic(name, description);
-                epic.setId(id); // сохраняем id эпика
+            case EPIC:
+                Epic epic = new Epic(name, description); // Создаём без id
+                epic.setId(id); // Устанавливаем id
                 return epic;
-            case "SUBTASK":
+            case SUBTASK:
                 int epicId = Integer.parseInt(parts[5]);
                 Epic epicForSubtask = getEpicById(epicId);
-                Subtask subtask = new Subtask(name, description, status, epicForSubtask);
-                subtask.setId(id); // сохраняем id подзадачи
+                Subtask subtask = new Subtask(name, description, status, epicForSubtask); // Создаём без id
+                subtask.setId(id); // Устанавливаем id
                 return subtask;
             default:
                 throw new IllegalArgumentException("Неподдерживаемый тип задачи: " + type);
+        }
+    }
+
+    // Добавляем задачу в менеджер в зависимости от ее типа
+    private void addTaskToManager(Task task) {
+        switch (task.getTaskType()) {
+            case TASK:
+                addTask(task);
+                break;
+            case EPIC:
+                addEpic((Epic) task);
+                break;
+            case SUBTASK:
+                addSubtask((Subtask) task);
+                break;
         }
     }
 

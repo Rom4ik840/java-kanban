@@ -4,7 +4,6 @@ import com.yandex.app.model.TaskType;
 
 // Класс Task представляет базовую задачу с идентификатором, заголовком, описанием и статусом.
 public class Task {
-
     // Уникальный идентификатор задачи.
     private int id;
 
@@ -96,18 +95,6 @@ public class Task {
     // Возвращает строковое представление задачи для сохранения в файл.
     @Override
     public String toString() {
-        return id + "," + taskType + "," + title + "," + status + "," + description + ","; // Использование поля taskType.
-    }
-
-    // Создает задачу из строки.
-    public static Task fromString(String value) {
-        String[] parts = value.split(",");
-        int id = Integer.parseInt(parts[0]);
-        String title = parts[2];
-        String description = parts[4];
-        Status status = Status.valueOf(parts[3]);
-        Task task = new Task(title, description, status);
-        task.setId(id);
-        return task;
+        return id + "," + getTaskType() + "," + getTitle() + "," + getStatus() + "," + getDescription() + ","; // Использование метода getTaskType.
     }
 }
