@@ -2,14 +2,19 @@ package com.yandex.app.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.yandex.app.model.TaskType;
 
+// Класс Epic наследует от класса Task и представляет собой эпик, содержащий подзадачи.
 public class Epic extends Task {
+    // Список подзадач, связанных с эпиком.
+    private final List<Subtask> subtasks;
 
-    private List<Subtask> subtasks;
-
+    // Конструктор класса Epic.
+    // Принимает заголовок и описание, статус устанавливается по умолчанию в NEW.
     public Epic(String title, String description) {
         super(title, description, Status.NEW);
         this.subtasks = new ArrayList<>();
+        setTaskType(TaskType.EPIC); // Установить тип задачи как EPIC
     }
 
     // Возвращает список подзадач эпика.
@@ -17,48 +22,46 @@ public class Epic extends Task {
         return subtasks;
     }
 
-    // Добавляет подзадачу к эпику.
+    // Добавляет подзадачу в список подзадач.
     public void addSubtask(Subtask subtask) {
-        if (subtask == null) {
-            throw new IllegalArgumentException("Подзадача не может быть null.");
+        if (subtask.getEpic() != this) {
+            throw new IllegalArgumentException("Подзадача не принадлежит этому эпику");
+        }
+        if (subtask.getId() == this.getId()) {
+            throw new IllegalArgumentException("Эпик не может быть добавлен как подзадача самому себе");
         }
         subtasks.add(subtask);
-        updateStatus();
+        updateStatus(); // Обновление статуса после добавления подзадачи
     }
 
-    // Удаляет подзадачу из эпика!
-    public void removeSubtask(Subtask subtask) {
-        subtasks.remove(subtask);
-        updateStatus();
+    // Удаляет подзадачу по ID.
+    public void removeSubtask(int subtaskId) {
+        subtasks.removeIf(subtask -> subtask.getId() == subtaskId);
+        updateStatus(); // Обновление статуса после удаления подзадачи
     }
 
-    // Обновляет статус эпика в зависимости от статусов его подзадач!
+    // Обновляет статус эпика на основе статусов подзадач.
     public void updateStatus() {
         if (subtasks.isEmpty()) {
             setStatus(Status.NEW);
-        } else {
-            boolean allNew = subtasks.stream().allMatch(subtask -> subtask.getStatus() == Status.NEW);
-            boolean allDone = subtasks.stream().allMatch(subtask -> subtask.getStatus() == Status.DONE);
+            return;
+        }
 
-            if (allNew) {
-                setStatus(Status.NEW);
-            } else if (allDone) {
-                setStatus(Status.DONE);
-            } else {
-                setStatus(Status.IN_PROGRESS);
-            }
+        boolean allNew = subtasks.stream().allMatch(subtask -> subtask.getStatus() == Status.NEW);
+        boolean allDone = subtasks.stream().allMatch(subtask -> subtask.getStatus() == Status.DONE);
+
+        if (allNew) {
+            setStatus(Status.NEW);
+        } else if (allDone) {
+            setStatus(Status.DONE);
+        } else {
+            setStatus(Status.IN_PROGRESS);
         }
     }
 
-    // Возвращает строковое представление эпика!
+    // Возвращает строковое представление эпика для сохранения в файл.
     @Override
     public String toString() {
-        return "Epic{" +
-                "id=" + getId() +
-                ", title='" + getTitle() + '\'' +
-                ", description='" + getDescription() + '\'' +
-                ", status=" + getStatus() +
-                ", subtasks=" + subtasks +
-                '}';
+        return getId() + "," + getTaskType() + "," + getTitle() + "," + getStatus() + "," + getDescription() + ",";
     }
 }

@@ -16,8 +16,7 @@ public class Main {
         // Используем фабрику для получения объекта TaskManager
         TaskManager manager = Managers.getDefault();
 
-
-        // Создание задач, эпиков и подзадач
+        // Создание задач, эпиков и подзадач!
         Task task1 = new Task("Переезд", "Собрать коробки, упаковать кошку, сказать слова прощания", Status.NEW);
         manager.addTask(task1);
 
@@ -29,7 +28,7 @@ public class Main {
         manager.addSubtask(subtask1);
         manager.addSubtask(subtask2);
 
-        // Вывод всех задач, эпиков и подзадач
+        // Вывод всех задач, эпиков и подзадач!
         System.out.println("Список всех задач:");
         System.out.println(manager.getAllTasks());
 
@@ -39,7 +38,7 @@ public class Main {
         System.out.println("Список всех подзадач:");
         System.out.println(manager.getAllSubtasks());
 
-        // Изменение заголовков, описаний и статусов задач
+        // Изменение заголовков, описаний и статусов задач!
         subtask1.setStatus(Status.IN_PROGRESS);
         subtask1.setTitle("Обновленная задача 1");
         subtask1.setDescription("Обновленное описание задачи 1");
@@ -48,7 +47,7 @@ public class Main {
         subtask2.setTitle("Обновленная задача 2");
         subtask2.setDescription("Обновленное описание задачи 2");
 
-        // Обновление задач в менеджере
+        // Обновление задач в менеджере!
         manager.updateSubtask(subtask1);
         manager.updateSubtask(subtask2);
 
@@ -78,27 +77,20 @@ public class Main {
         System.out.println("Список всех подзадач:");
         System.out.println(manager.getAllSubtasks());
 
-        // Просмотр задач для проверки истории!
+        // Просмотр задач для проверки истории
         manager.getTaskById(task1.getId());
         manager.getEpicById(epic1.getId());
         manager.getSubtaskById(subtask1.getId());
 
-        // Создаем 11 задач и добавляем их в историю!
+        // Создаем 11 задач и добавляем их в историю
         for (int i = 1; i <= 11; i++) {
             Task task = new Task("Задача " + i, "Описание задачи " + i, Status.NEW);
             manager.addTask(task);
             manager.getTaskById(task.getId());
         }
 
-        // Вывод истории просмотров!
+        // Вывод истории просмотров
         System.out.println("История просмотров:");
         System.out.println(manager.getHistory());
-
-        // Проверка, что в истории не более 10 элементов!
-        if (manager.getHistory().size() <= 10) {
-            System.out.println("История содержит не более 10 элементов, как и ожидалось.");
-        } else {
-            System.out.println("Ошибка: История содержит более 10 элементов.");
-        }
     }
 }

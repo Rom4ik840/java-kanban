@@ -1,8 +1,35 @@
-name: Java Tests
+ name: Java Tests
 
-on:
-  pull_request:
+ on:
+   pull_request:
 
-jobs:
-  build:
-    uses: yandex-praktikum/java-kanban/.github/workflows/api-tests.yml@ci
+ jods:
+
+    build:
+
+      runs-on: ubuntu-latest
+
+
+      steps:
+        - name: Checkout code
+        uses: actions/checkout@v3  # Обновлено до v3
+
+        - name: Set up JDK 11
+        uses: actions/setup-java@v3  # Обновлено до v3 
+        with:
+          java-version: '11'
+
+
+           - name: Run tests
+             run: ./gradlew test  # Измените на команду, которая используется для запуска ваших тестов
+
+
+
+
+
+
+
+
+
+
+

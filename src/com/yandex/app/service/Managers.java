@@ -1,4 +1,5 @@
 package com.yandex.app.service;
+//Честно я так и не понял какие изменения должны быть сдесь).
 
 public class Managers {
 
