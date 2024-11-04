@@ -1,6 +1,9 @@
 package com.yandex.app.model;
 
-import com.yandex.app.model.TaskType;
+import com.yandex.app.service.TaskType;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 // Класс Subtask представляет подзадачу, которая является типом задачи и связана с эпиком.
 public class Subtask extends Task {
@@ -8,8 +11,8 @@ public class Subtask extends Task {
     private Epic epic;
 
     // Конструктор класса Subtask.
-    public Subtask(String title, String description, Status status, Epic epic) {
-        super(title, description, status);
+    public Subtask(String title, String description, Status status, Epic epic, Duration duration, LocalDateTime startTime) {
+        super(title, description, status, duration, startTime);
         this.epic = epic;
         setTaskType(TaskType.SUBTASK); // Установить тип задачи как SUBTASK
     }
@@ -30,11 +33,12 @@ public class Subtask extends Task {
         this.epic = epic;
     }
 
-
-
     // Возвращает строковое представление подзадачи в формате CSV.
     @Override
     public String toString() {
-        return getId() + "," + getTaskType() + "," + getTitle() + "," + getStatus() + "," + getDescription() + "," + (epic != null ? epic.getId() : "null");
+        return getId() + "," + getTaskType() + "," + getTitle() + "," + getStatus() + "," + getDescription() + "," +
+                (getDuration() != null ? getDuration().toMinutes() : "null") + "," +
+                (getStartTime() != null ? getStartTime().toString() : "null") + "," +
+                (epic != null ? epic.getId() : "null");
     }
 }

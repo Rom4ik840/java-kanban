@@ -7,10 +7,12 @@ import com.yandex.app.model.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-//Тесты класса InMemoryTaskManager
+
 class InMemoryTaskManagerTest {
     private TaskManager manager;
     private Task task1;
@@ -23,12 +25,12 @@ class InMemoryTaskManagerTest {
     @BeforeEach
     void setUp() {
         manager = Managers.getDefault();
-        task1 = new Task("Задача 1", "Описание 1", Status.NEW);
-        task2 = new Task("Задача 2", "Описание 2", Status.NEW);
+        task1 = new Task("Задача 1", "Описание 1", Status.NEW, Duration.ofHours(1), LocalDateTime.of(2023, 10, 1, 10, 0));
+        task2 = new Task("Задача 2", "Описание 2", Status.NEW, Duration.ofHours(1), LocalDateTime.of(2023, 10, 1, 12, 0));
         epic1 = new Epic("Эпик 1", "Описание 1");
         epic2 = new Epic("Эпик 2", "Описание 2");
-        subtask1 = new Subtask("Подзадача 1", "Описание 1", Status.NEW, epic1);
-        subtask2 = new Subtask("Подзадача 2", "Описание 2", Status.NEW, epic1);
+        subtask1 = new Subtask("Подзадача 1", "Описание 1", Status.NEW, epic1, Duration.ofHours(1), LocalDateTime.of(2023, 10, 1, 14, 0));
+        subtask2 = new Subtask("Подзадача 2", "Описание 2", Status.NEW, epic1, Duration.ofHours(1), LocalDateTime.of(2023, 10, 1, 16, 0));
     }
 
     @Test

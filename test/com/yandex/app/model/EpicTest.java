@@ -5,8 +5,11 @@ import com.yandex.app.service.TaskManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 import static org.junit.jupiter.api.Assertions.*;
-//Тесты класса Epic
+
 class EpicTest {
     private Epic epic1;
     private Epic epic2;
@@ -21,8 +24,8 @@ class EpicTest {
         epic2 = new Epic("Эпик 2", "Описание 2");
 
         // Создаем подзадачи
-        subtask1 = new Subtask("Подзадача 1", "Описание 1", Status.NEW, epic1);
-        subtask2 = new Subtask("Подзадача 2", "Описание 2", Status.DONE, epic1);
+        subtask1 = new Subtask("Подзадача 1", "Описание 1", Status.NEW, epic1, Duration.ofHours(1), LocalDateTime.of(2023, 10, 1, 10, 0));
+        subtask2 = new Subtask("Подзадача 2", "Описание 2", Status.DONE, epic1, Duration.ofHours(1), LocalDateTime.of(2023, 10, 1, 12, 0));
 
         // Добавляем эпик и подзадачи в менеджер
         taskManager.addEpic(epic1);
@@ -34,6 +37,15 @@ class EpicTest {
     void testEquals() {
         epic1.setId(1);
         epic2.setId(1);
+
+        // Устанавливаем одинаковые значения для всех полей эпиков
+        epic2.setTitle(epic1.getTitle());
+        epic2.setDescription(epic1.getDescription());
+        epic2.setStatus(epic1.getStatus());
+        epic2.setDuration(epic1.getDuration());
+        epic2.setStartTime(epic1.getStartTime());
+        epic2.endTime = epic1.getEndTime();
+
         assertEquals(epic1, epic2);
     }
 
@@ -46,7 +58,7 @@ class EpicTest {
 
     @Test
     void testAddSubtaskToSelf() {
-        Subtask subtaskToSelf = new Subtask("Подзадача самому себе", "Описание", Status.NEW, epic1);
+        Subtask subtaskToSelf = new Subtask("Подзадача самому себе", "Описание", Status.NEW, epic1, Duration.ofHours(1), LocalDateTime.of(2023, 10, 1, 14, 0));
         subtaskToSelf.setId(epic1.getId()); // Устанавливаем ID подзадачи равным ID эпика
         assertThrows(IllegalArgumentException.class, () -> {
             epic1.addSubtask(subtaskToSelf);
@@ -60,6 +72,9 @@ class EpicTest {
         // Проверяем, что в списке подзадач эпика больше нет ID удаленной подзадачи
         assertFalse(epic1.getSubtasks().contains(subtask1),
                 "Эпик не должен содержать удаленную подзадачу.");
+
+        // Проверяем, что статус эпика обновлен
+        assertEquals(Status.DONE, epic1.getStatus(), "Статус эпика должен быть обновлен.");
     }
 
     @Test
@@ -75,5 +90,16 @@ class EpicTest {
         taskManager.deleteSubtaskById(subtask1.getId()); // Удаляем первую подзадачу
         taskManager.deleteSubtaskById(subtask2.getId()); // Удаляем вторую подзадачу
         assertEquals(Status.NEW, epic1.getStatus(), "Статус эпика без подзадач должен быть NEW.");
+    }
+
+    @Test
+    void testEpicWithAllSubtasksDoneIsDone() {
+        subtask1.setStatus(Status.DONE);
+        subtask2.setStatus(Status.DONE);
+
+        // Вручную обновляем статус эпика
+        epic1.updateStatus();
+
+        assertEquals(Status.DONE, epic1.getStatus(), "Статус эпика должен быть DONE, если все подзадачи выполнены.");
     }
 }

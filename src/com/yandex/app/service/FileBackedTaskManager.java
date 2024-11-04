@@ -4,17 +4,22 @@ import com.yandex.app.model.Epic;
 import com.yandex.app.model.Subtask;
 import com.yandex.app.model.Task;
 import com.yandex.app.model.Status;
-import com.yandex.app.service.ManagerSaveException;
-import com.yandex.app.model.TaskType;
+import com.yandex.app.service.TaskType;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeSet;
+import java.util.Comparator;
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
     private final File file;
+    private final TreeSet<Task> prioritizedTasks = new TreeSet<>(Comparator.comparing(Task::getStartTime, Comparator.nullsLast(Comparator.naturalOrder())));
 
     // Конструктор для инициализации менеджера с файлом и менеджером истории
     public FileBackedTaskManager(File file, HistoryManager historyManager) {
@@ -31,7 +36,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             }
 
             StringBuilder sb = new StringBuilder();
-            sb.append("id,type,name,status,description,epicId\n");
+            sb.append("id,type,name,status,description,duration,startTime,endTime,epicId\n");
             for (Task task : getAllTasks()) {
                 sb.append(taskToString(task)).append("\n");
             }
@@ -49,34 +54,58 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     @Override
     public Task addTask(Task task) {
-        super.addTask(task);
+        if (task.getStartTime() != null && task.getEndTime() != null) {
+            if (isOverlapping(task)) {
+                throw new IllegalArgumentException("Задача пересекается с другими задачами по времени выполнения.");
+            }
+        }
+        Task addedTask = super.addTask(task);
+        addToPrioritizedTasks(addedTask);
         save(); // Сохраняем данные после добавления задачи
-        return task;
+        return addedTask;
     }
 
     @Override
     public Subtask addSubtask(Subtask subtask) {
-        super.addSubtask(subtask);
+        if (subtask.getStartTime() != null && subtask.getEndTime() != null) {
+            if (isOverlapping(subtask)) {
+                throw new IllegalArgumentException("Подзадача пересекается с другими задачами по времени выполнения.");
+            }
+        }
+        Subtask addedSubtask = super.addSubtask(subtask);
+        addToPrioritizedTasks(addedSubtask);
         save(); // Сохраняем данные после добавления подзадачи
-        return subtask;
+        return addedSubtask;
     }
 
     @Override
     public Epic addEpic(Epic epic) {
-        super.addEpic(epic);
+        Epic addedEpic = super.addEpic(epic);
         save(); // Сохраняем данные после добавления эпика
-        return epic;
+        return addedEpic;
     }
 
     @Override
     public void updateTask(Task task) {
+        if (task.getStartTime() != null && task.getEndTime() != null) {
+            if (isOverlapping(task)) {
+                throw new IllegalArgumentException("Задача пересекается с другими задачами по времени выполнения.");
+            }
+        }
         super.updateTask(task);
+        updatePrioritizedTasks(task);
         save(); // Сохраняем данные после обновления задачи
     }
 
     @Override
     public void updateSubtask(Subtask subtask) {
+        if (subtask.getStartTime() != null && subtask.getEndTime() != null) {
+            if (isOverlapping(subtask)) {
+                throw new IllegalArgumentException("Подзадача пересекается с другими задачами по времени выполнения.");
+            }
+        }
         super.updateSubtask(subtask);
+        updatePrioritizedTasks(subtask);
         save(); // Сохраняем данные после обновления подзадачи
     }
 
@@ -89,37 +118,55 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     @Override
     public void deleteTaskById(int id) {
         super.deleteTaskById(id);
+        removeFromPrioritizedTasks(id);
         save(); // Сохраняем данные после удаления задачи
     }
 
     @Override
     public void deleteSubtaskById(int id) {
         super.deleteSubtaskById(id);
+        removeFromPrioritizedTasks(id);
         save(); // Сохраняем данные после удаления подзадачи
     }
 
     @Override
     public void deleteEpicById(int id) {
+        Epic epic = getEpicById(id);
+        if (epic != null) {
+            for (Subtask subtask : epic.getSubtasks()) {
+                removeFromPrioritizedTasks(subtask.getId());
+            }
+        }
         super.deleteEpicById(id);
         save(); // Сохраняем данные после удаления эпика
     }
 
     // Преобразуем задачу в строку для сохранения в файл
     private String taskToString(Task task) {
-        return String.format("%d,TASK,%s,%s,%s,",
-                task.getId(), task.getTitle(), task.getStatus(), task.getDescription());
+        return String.format("%d,TASK,%s,%s,%s,%d,%s,%s,",
+                task.getId(), task.getTitle(), task.getStatus(), task.getDescription(),
+                task.getDuration() != null ? task.getDuration().toMinutes() : "null",
+                task.getStartTime() != null ? task.getStartTime().toString() : "null",
+                task.getEndTime() != null ? task.getEndTime().toString() : "null");
     }
 
     // Преобразуем эпик в строку для сохранения в файл
     private String epicToString(Epic epic) {
-        return String.format("%d,EPIC,%s,%s,%s,",
-                epic.getId(), epic.getTitle(), epic.getStatus(), epic.getDescription());
+        return String.format("%d,EPIC,%s,%s,%s,%d,%s,%s,",
+                epic.getId(), epic.getTitle(), epic.getStatus(), epic.getDescription(),
+                epic.getDuration() != null ? epic.getDuration().toMinutes() : "null",
+                epic.getStartTime() != null ? epic.getStartTime().toString() : "null",
+                epic.getEndTime() != null ? epic.getEndTime().toString() : "null");
     }
 
     // Преобразуем подзадачу в строку для сохранения в файл
     private String subtaskToString(Subtask subtask) {
-        return String.format("%d,SUBTASK,%s,%s,%s,%d",
-                subtask.getId(), subtask.getTitle(), subtask.getStatus(), subtask.getDescription(), subtask.getEpic().getId());
+        return String.format("%d,SUBTASK,%s,%s,%s,%d,%s,%s,%d",
+                subtask.getId(), subtask.getTitle(), subtask.getStatus(), subtask.getDescription(),
+                subtask.getDuration() != null ? subtask.getDuration().toMinutes() : "null",
+                subtask.getStartTime() != null ? subtask.getStartTime().toString() : "null",
+                subtask.getEndTime() != null ? subtask.getEndTime().toString() : "null",
+                subtask.getEpic() != null ? subtask.getEpic().getId() : "null");
     }
 
     // Загружаем задачи из файла
@@ -147,20 +194,26 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         String name = parts[2];
         Status status = Status.valueOf(parts[3]);
         String description = parts[4];
+        Duration duration = parts[5].equals("null") ? null : Duration.ofMinutes(Long.parseLong(parts[5]));
+        LocalDateTime startTime = parts[6].equals("null") ? null : LocalDateTime.parse(parts[6]);
+        LocalDateTime endTime = parts[7].equals("null") ? null : LocalDateTime.parse(parts[7]);
 
         switch (type) {
             case TASK:
-                Task task = new Task(name, description, status); // Создаём без id
+                Task task = new Task(name, description, status, duration, startTime); // Создаём без id
                 task.setId(id); // Устанавливаем id
                 return task;
             case EPIC:
                 Epic epic = new Epic(name, description); // Создаём без id
                 epic.setId(id); // Устанавливаем id
+                epic.setDuration(duration);
+                epic.setStartTime(startTime);
+                epic.endTime = endTime;
                 return epic;
             case SUBTASK:
-                int epicId = Integer.parseInt(parts[5]);
+                int epicId = Integer.parseInt(parts[8]);
                 Epic epicForSubtask = getEpicById(epicId);
-                Subtask subtask = new Subtask(name, description, status, epicForSubtask); // Создаём без id
+                Subtask subtask = new Subtask(name, description, status, epicForSubtask, duration, startTime); // Создаём без id
                 subtask.setId(id); // Устанавливаем id
                 return subtask;
             default:
@@ -188,5 +241,38 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         FileBackedTaskManager manager = new FileBackedTaskManager(file, historyManager);
         manager.loadFromFile(file); // Вызов метода для загрузки задач
         return manager;
+    }
+
+    @Override
+    public List<Task> getPrioritizedTasks() {
+        return new ArrayList<>(prioritizedTasks);
+    }
+
+    private void addToPrioritizedTasks(Task task) {
+        if (task.getStartTime() != null) {
+            prioritizedTasks.add(task);
+        }
+    }
+
+    private void removeFromPrioritizedTasks(int taskId) {
+        prioritizedTasks.removeIf(task -> task.getId() == taskId);
+    }
+
+    private void updatePrioritizedTasks(Task task) {
+        removeFromPrioritizedTasks(task.getId());
+        addToPrioritizedTasks(task);
+    }
+
+    private boolean isOverlapping(Task task) {
+        return getPrioritizedTasks().stream()
+                .filter(existingTask -> existingTask.getId() != task.getId()) // Исключаем саму задачу
+                .anyMatch(existingTask -> isOverlapping(existingTask, task));
+    }
+
+    private boolean isOverlapping(Task task1, Task task2) {
+        if (task1.getStartTime() == null || task1.getEndTime() == null || task2.getStartTime() == null || task2.getEndTime() == null) {
+            return false;
+        }
+        return task1.getStartTime().isBefore(task2.getEndTime()) && task2.getStartTime().isBefore(task1.getEndTime());
     }
 }

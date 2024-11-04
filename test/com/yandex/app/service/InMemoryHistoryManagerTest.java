@@ -5,10 +5,12 @@ import com.yandex.app.model.Status;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-//Тесты класса InMemoryHistoryManager
+
 class InMemoryHistoryManagerTest {
     private HistoryManager historyManager;
     private Task task1;
@@ -18,9 +20,9 @@ class InMemoryHistoryManagerTest {
     @BeforeEach
     void setUp() {
         historyManager = new InMemoryHistoryManager();
-        task1 = new Task("Задача 1", "Описание 1", Status.NEW);
-        task2 = new Task("Задача 2", "Описание 2", Status.NEW);
-        task3 = new Task("Задача 3", "Описание 3", Status.NEW);
+        task1 = new Task("Задача 1", "Описание 1", Status.NEW, Duration.ofHours(1), LocalDateTime.of(2023, 10, 1, 10, 0));
+        task2 = new Task("Задача 2", "Описание 2", Status.NEW, Duration.ofHours(1), LocalDateTime.of(2023, 10, 1, 12, 0));
+        task3 = new Task("Задача 3", "Описание 3", Status.NEW, Duration.ofHours(1), LocalDateTime.of(2023, 10, 1, 14, 0));
 
         task1.setId(1); // Устанавливаем ID для задач
         task2.setId(2);

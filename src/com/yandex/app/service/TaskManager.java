@@ -75,4 +75,7 @@ public interface TaskManager {
 
     // Получение количества подзадач!
     int getSubtasksCount();
+
+    // Получение списка задач и подзадач в порядке приоритета!
+    List<Task> getPrioritizedTasks();
 }

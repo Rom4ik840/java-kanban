@@ -3,7 +3,7 @@ package com.yandex.app.service;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-//Тесты класса Managers
+
 class ManagersTest {
 
     @Test
@@ -16,5 +16,11 @@ class ManagersTest {
     void testGetDefaultHistoryManager() {
         HistoryManager historyManager = Managers.getDefaultHistory();
         assertNotNull(historyManager);
+    }
+
+    @Test
+    void testGetDefaultFileBackedTaskManager() {
+        TaskManager taskManager = Managers.getDefaultFileBacked(null);
+        assertNotNull(taskManager);
     }
 }

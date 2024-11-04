@@ -1,4 +1,4 @@
-package com.yandex.app.model;
+package com.yandex.app.service;
 
 // Перечисление для типов задач.
 public enum TaskType {

@@ -8,6 +8,9 @@ import com.yandex.app.service.HistoryManager;
 import com.yandex.app.service.Managers;
 import com.yandex.app.service.TaskManager;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
 public class Main {
     public static void main(String[] args) {
         // Используем фабрику для получения объекта HistoryManager
@@ -17,14 +20,14 @@ public class Main {
         TaskManager manager = Managers.getDefault();
 
         // Создание задач, эпиков и подзадач!
-        Task task1 = new Task("Переезд", "Собрать коробки, упаковать кошку, сказать слова прощания", Status.NEW);
+        Task task1 = new Task("Переезд", "Собрать коробки, упаковать кошку, сказать слова прощания", Status.NEW, Duration.ofHours(2), LocalDateTime.of(2023, 10, 1, 10, 0));
         manager.addTask(task1);
 
         Epic epic1 = new Epic("Важный эпик 2", "Описание эпика 2");
         manager.addEpic(epic1);
 
-        Subtask subtask1 = new Subtask("Задача 1", "Описание задачи 1", Status.NEW, epic1);
-        Subtask subtask2 = new Subtask("Задача 2", "Описание задачи 2", Status.NEW, epic1);
+        Subtask subtask1 = new Subtask("Задача 1", "Описание задачи 1", Status.NEW, epic1, Duration.ofHours(1), LocalDateTime.of(2023, 10, 1, 12, 0));
+        Subtask subtask2 = new Subtask("Задача 2", "Описание задачи 2", Status.NEW, epic1, Duration.ofHours(1), LocalDateTime.of(2023, 10, 1, 14, 0));
         manager.addSubtask(subtask1);
         manager.addSubtask(subtask2);
 
@@ -84,7 +87,7 @@ public class Main {
 
         // Создаем 11 задач и добавляем их в историю
         for (int i = 1; i <= 11; i++) {
-            Task task = new Task("Задача " + i, "Описание задачи " + i, Status.NEW);
+            Task task = new Task("Задача " + i, "Описание задачи " + i, Status.NEW, Duration.ofHours(1), LocalDateTime.of(2023, 10, i, 10, 0));
             manager.addTask(task);
             manager.getTaskById(task.getId());
         }
