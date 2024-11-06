@@ -28,6 +28,9 @@ public class Task {
     // Время начала задачи.
     private LocalDateTime startTime;
 
+    // Время окончания задачи.
+    private LocalDateTime endTime;
+
     // Конструктор класса Task.
     public Task(String title, String description, Status status, Duration duration, LocalDateTime startTime) {
         this.title = title;
@@ -36,6 +39,7 @@ public class Task {
         this.duration = duration;
         this.startTime = startTime;
         this.taskType = TaskType.TASK; // Установить тип задачи по умолчанию
+        updateEndTime(); // Обновляем время окончания при создании задачи
     }
 
     // Геттеры и сеттеры.
@@ -97,6 +101,7 @@ public class Task {
     // Устанавливает продолжительность задачи.
     public void setDuration(Duration duration) {
         this.duration = duration;
+        updateEndTime(); // Обновляем время окончания при изменении продолжительности
     }
 
     // Возвращает время начала задачи.
@@ -107,14 +112,26 @@ public class Task {
     // Устанавливает время начала задачи.
     public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
+        updateEndTime(); // Обновляем время окончания при изменении времени начала
     }
 
     // Возвращает время окончания задачи.
     public LocalDateTime getEndTime() {
-        if (startTime == null || duration == null) {
-            return null;
+        return endTime;
+    }
+
+    // Устанавливает время окончания задачи.
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    // Обновляет время окончания задачи на основе времени начала и продолжительности.
+    private void updateEndTime() {
+        if (startTime != null && duration != null) {
+            this.endTime = startTime.plus(duration);
+        } else {
+            this.endTime = null;
         }
-        return startTime.plus(duration);
     }
 
     // Переопределение методов equals и hashCode для корректного сравнения задач.
@@ -129,7 +146,8 @@ public class Task {
                 status == task.status &&
                 taskType == task.taskType &&
                 duration.equals(task.duration) &&
-                startTime.equals(task.startTime);
+                startTime.equals(task.startTime) &&
+                endTime.equals(task.endTime);
     }
 
     @Override
@@ -141,14 +159,16 @@ public class Task {
         result = 31 * result + taskType.hashCode();
         result = 31 * result + duration.hashCode();
         result = 31 * result + startTime.hashCode();
+        result = 31 * result + endTime.hashCode();
         return result;
     }
 
     // Возвращает строковое представление задачи для сохранения в файл.
     @Override
     public String toString() {
-        return id + "," + getTaskType() + "," + getTitle() + "," + getStatus() + "," + getDescription() + "," +
+        return getId() + "," + getTaskType() + "," + getTitle() + "," + getStatus() + "," + getDescription() + "," +
                 (duration != null ? duration.toMinutes() : "null") + "," +
-                (startTime != null ? startTime.toString() : "null");
+                (startTime != null ? startTime.toString() : "null") + "," +
+                (endTime != null ? endTime.toString() : "null");
     }
 }

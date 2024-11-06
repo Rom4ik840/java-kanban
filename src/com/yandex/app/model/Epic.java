@@ -72,7 +72,7 @@ public class Epic extends Task {
         if (subtasks.isEmpty()) {
             setDuration(Duration.ZERO);
             setStartTime(null);
-            endTime = null;
+            setEndTime(null);
             return;
         }
 
@@ -88,19 +88,29 @@ public class Epic extends Task {
                 .max(LocalDateTime::compareTo)
                 .orElse(null);
 
-        Duration totalDuration = subtasks.stream()
-                .map(Subtask::getDuration)
-                .filter(duration -> duration != null)
-                .reduce(Duration.ZERO, Duration::plus);
+        Duration totalDuration;
+        if (minStartTime != null && maxEndTime != null) {
+            totalDuration = Duration.between(minStartTime, maxEndTime);
+        } else {
+            totalDuration = subtasks.stream()
+                    .map(Subtask::getDuration)
+                    .filter(duration -> duration != null)
+                    .reduce(Duration.ZERO, Duration::plus);
+        }
 
         setStartTime(minStartTime);
-        endTime = maxEndTime;
+        setEndTime(maxEndTime);
         setDuration(totalDuration);
     }
 
     // Возвращает время окончания эпика.
     public LocalDateTime getEndTime() {
         return endTime;
+    }
+
+    // Устанавливает время окончания эпика.
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
     }
 
     // Возвращает строковое представление эпика для сохранения в файл.

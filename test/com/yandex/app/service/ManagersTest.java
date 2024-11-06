@@ -20,7 +20,7 @@ class ManagersTest {
 
     @Test
     void testGetDefaultFileBackedTaskManager() {
-        TaskManager taskManager = Managers.getDefaultFileBacked(null);
+        TaskManager taskManager = Managers.getDefaultFileBacked();
         assertNotNull(taskManager);
     }
 }

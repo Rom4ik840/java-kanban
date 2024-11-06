@@ -14,7 +14,8 @@ public class Managers {
     }
 
     // Метод для получения объекта менеджера задач с сохранением в файл!
-    public static TaskManager getDefaultFileBacked(File file) {
+    public static TaskManager getDefaultFileBacked() {
+        File file = new File("tasks.csv"); // Стандартное имя файла для сохранения задач
         return new FileBackedTaskManager(file, getDefaultHistory());
     }
 
