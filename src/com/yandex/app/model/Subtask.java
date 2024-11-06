@@ -1,15 +1,20 @@
 package com.yandex.app.model;
 
-// Класс Subtask представляет подзадачу, которая является типом задачи и связана с эпиком!
-public class Subtask extends Task {
+import com.yandex.app.service.TaskType;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+
+// Класс Subtask представляет подзадачу, которая является типом задачи и связана с эпиком.
+public class Subtask extends Task {
     // Эпик, к которому относится эта подзадача.
     private Epic epic;
 
-    // Конструктор класса Subtask!
-    public Subtask(String title, String description, Status status, Epic epic) {
-        super(title, description, status);
+    // Конструктор класса Subtask.
+    public Subtask(String title, String description, Status status, Epic epic, Duration duration, LocalDateTime startTime) {
+        super(title, description, status, duration, startTime);
         this.epic = epic;
+        setTaskType(TaskType.SUBTASK); // Установить тип задачи как SUBTASK
     }
 
     // Возвращает эпик, к которому относится эта подзадача.
@@ -22,17 +27,18 @@ public class Subtask extends Task {
         if (epic == null) {
             throw new IllegalArgumentException("Эпик не может быть null.");
         }
+        if (this.epic != null && this.epic.equals(epic)) {
+            throw new IllegalArgumentException("Подзадача не может быть связана с самим собой.");
+        }
         this.epic = epic;
     }
 
-    // Возвращает строковое представление подзадачи.
+    // Возвращает строковое представление подзадачи в формате CSV.
     @Override
     public String toString() {
-        return "Subtask{" +
-                "id=" + getId() +
-                ", title='" + getTitle() + '\'' +
-                ", description='" + getDescription() + '\'' +
-                ", status=" + getStatus() +
-                '}';
+        return getId() + "," + getTaskType() + "," + getTitle() + "," + getStatus() + "," + getDescription() + "," +
+                (getDuration() != null ? getDuration().toMinutes() : "null") + "," +
+                (getStartTime() != null ? getStartTime().toString() : "null") + "," +
+                (epic != null ? epic.getId() : "null");
     }
 }

@@ -1,0 +1,6 @@
+./Test/com/yandex/app/model/EpicTest.java
+./Test/com/yandex/app/model/SubtaskTest.java
+./Test/com/yandex/app/model/TaskTest.java
+./Test/com/yandex/app/service/InMemoryHistoryManagerTest.java
+./Test/com/yandex/app/service/InMemoryTaskManagerTest.java
+./Test/com/yandex/app/service/ManagersTest.java
